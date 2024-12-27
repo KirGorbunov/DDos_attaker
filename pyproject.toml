@@ -1,0 +1,32 @@
+[tool.ruff]
+line-length = 120
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B", "ANN", "Q", "S"]
+
+[tool.ruff.lint.isort]
+order-by-type = true
+force-sort-within-sections = true
+combine-as-imports = true
+case-sensitive = false
+lines-after-imports = 2
+force-single-line = false
+
+[tool.poetry]
+name = "ddos-attacker"
+version = "0.1.0"
+description = ""
+authors = ["KirGorbunov <KirGorbunov@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+aiohttp = "^3.11.11"
+
+
+[tool.poetry.group.dev.dependencies]
+ruff = "^0.8.4"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
