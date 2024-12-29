@@ -3,21 +3,10 @@ import logging
 
 import aiohttp
 
-logging.basicConfig(
-    filename="request.log",
-    level=logging.INFO,
-    format="%(asctime)s.%(msecs)03d - %(levelname)s - %(message)s",
-    datefmt="%Y-%m-%d %H:%M:%S",
-)
-logger = logging.getLogger(__name__)
+from logger_config import setup_logger
 
-console_handler = logging.StreamHandler()
-console_handler.setLevel(logging.INFO)
-console_handler.setFormatter(logging.Formatter(
-    "%(asctime)s.%(msecs)03d - %(levelname)s - %(message)s",
-    datefmt="%Y-%m-%d %H:%M:%S",
-))
-logger.addHandler(console_handler)
+
+logger = setup_logger(__name__, "request.log", level=logging.INFO)
 
 url = "http://127.0.0.1:8000/DDos_test"
 
