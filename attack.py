@@ -1,20 +1,41 @@
 import asyncio
-from asyncio import Queue
+import logging
 
 import aiohttp
-from aiohttp import ClientSession
 
+logging.basicConfig(
+    filename="request.log",
+    level=logging.INFO,
+    format="%(asctime)s.%(msecs)03d - %(levelname)s - %(message)s",
+    datefmt="%Y-%m-%d %H:%M:%S",
+)
+logger = logging.getLogger(__name__)
+
+console_handler = logging.StreamHandler()
+console_handler.setLevel(logging.INFO)
+console_handler.setFormatter(logging.Formatter(
+    "%(asctime)s.%(msecs)03d - %(levelname)s - %(message)s",
+    datefmt="%Y-%m-%d %H:%M:%S",
+))
+logger.addHandler(console_handler)
 
 url = "http://127.0.0.1:8000/DDos_test"
 
 rate = 15
 interval = 1 / rate
 
-async def send_request(session: ClientSession, queue: Queue) -> None:
+async def send_request(session: aiohttp.ClientSession, queue: asyncio.Queue) -> None:
     while True:
         await queue.get()
-        async with session.get(url) as response:
-            print(f"Status Code: {response.status}, Response: {await response.text()}")
+        try:
+            async with session.get(url) as response:
+                logger.info(f"Status Code: {response.status}, Response: {await response.text()}")
+        except aiohttp.ClientError as e:
+            logger.error(f"Client error: {e}")
+        except asyncio.TimeoutError:
+            logger.error("Request timed out")
+        except Exception as e:
+            logger.error(f"Unexpected error: {e}")
 
 async def main() -> None:
     queue = asyncio.Queue(maxsize=rate * 2)
